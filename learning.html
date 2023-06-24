@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Inline JavaScript Variable</title>
+</head>
+
+
+<!-- CSS Here -->
+
+
+<!-- HTML here -->
+
+<body>
+    <style>
+        * {
+            font-family: Arial, Helvetica, sans-serif;
+            /* font-family: 'Times New Roman', Times, serif; */
+        }
+
+        .button-9 {
+            appearance: button;
+            backface-visibility: hidden;
+            background-color: blue;
+            border-radius: 6px;
+            border-width: 0;
+            box-shadow: rgba(50, 50, 93, .1) 0 0 0 1px inset, rgba(50, 50, 93, .1) 0 2px 5px 0, rgba(0, 0, 0, .07) 0 1px 1px 0;
+            box-sizing: border-box;
+            color: #fff;
+            cursor: pointer;
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: 100%;
+            height: 44px;
+            line-height: 1.15;
+            margin: 12px 0 0;
+            outline: none;
+            overflow: hidden;
+            padding: 0 25px;
+            position: relative;
+            text-align: center;
+            text-transform: none;
+            transform: translateZ(0);
+            transition: all .2s, box-shadow .08s ease-in;
+            user-select: none;
+            -webkit-user-select: none;
+            touch-action: manipulation;
+            width: 100%;
+            /* margin-left: 0;
+            margin-right: auto; */
+        }
+
+        .button-9:disabled {
+            cursor: default;
+        }
+
+        .button-9:focus {
+            box-shadow: rgba(50, 50, 93, .1) 0 0 0 1px inset, rgba(50, 50, 93, .2) 0 6px 15px 0, rgba(0, 0, 0, .1) 0 2px 2px 0, rgba(50, 151, 211, .3) 0 0 0 4px;
+        }
+
+        .test {
+            display: flex;
+            flex-direction: column;
+            flex-wrap: wrap;
+            justify-content: flex-start;
+            /* align-content: center; */
+            position: relative;
+            width: auto;
+            /* margin: 0 auto; */
+            text-align: center;
+            margin-left: 0;
+            margin-right: auto;
+            flex: 1;
+            size: 50%;
+            /* margin: 10px; */
+        }
+
+        .test-h1 {
+            color: #405cf5;
+            margin-top: 0px;
+            margin-bottom: 0px;
+            font-size: medium;
+            align-self: left;
+        }
+
+        .row1 {
+            display: flex;
+            flex-direction: row;
+            flex-basis: 100%;
+            flex: 1;
+            width: 50%;
+            /* margin: auto; */
+            justify-content: left;
+        }
+
+        .row2 {
+            display: flex;
+            flex-direction: row;
+            flex-basis: 100%;
+            flex: 1;
+            width: 40%;
+            /* margin: auto; */
+            justify-content: left;
+        }
+
+        .main {
+            font-family: Arial, Helvetica, sans-serif;
+            /* TODO uncomment display below to make buttons work properly */
+            /* visibility: hidden; */
+        }
+
+        .copyText {
+            width: 40%;
+            height: 70px;
+        }
+
+        .copyButton {
+            /* margin: 1%; */
+            align-content: right;
+            margin-left: 5px;
+            height: 30px;
+        }
+
+        .textBox {
+            display: flex;
+            flex-direction: row;
+            justify-content: flex-start;
+            align-items: flex-end;
+        }
+
+        .list {
+            font-size: medium;
+        }
+
+        .esNode {
+            width: 50%;
+            height: max-content;
+            text-align: left;
+        }
+    </style>
+
+    <h1>ElasticSearch Node Restart Tool</h1>
+    <h1 class="test-h1">Select the elasticsearch node you're updating below</h1>
+    <!-- Buttons -->
+    <div class="test">
+        <div class="row1">
+            <button class="button-9" id="esNode01">esnode-01</button>
+            <button class="button-9" id="esNode02">esnode-02</button>
+            <button class="button-9" id="esNode03">esnode-03</button>
+            <button class="button-9" id="esNode04">esnode-04</button>
+        </div>
+        <div class="row2">
+            <button class="button-9" id="esMaster01">esmaster-01</button>
+            <button class="button-9" id="esMaster02">esmaster-02</button>
+            <button class="button-9" id="esMaster03">esmaster-03</button>
+
+        </div>
+    </div>
+
+
+
+
+    <main class="main">
+        <h2>Click on the textboxes below to copy the command inside the textbox.</h2>
+        <h3 id="listTitle"></h3>
+        <ol>
+            <li>
+                <p>Check the health of the cluster</p>
+                <p><textarea class="esNode" readonly>curl -X GET "10.250.3.20:9200/_cluster/health?pretty"</textarea>
+                </p>
+            </li>
+            <li>
+                <p>Disable shard allocation<br /><textarea class="esNode" readonly>curl -X PUT "10.250.3.20:9200/_cluster/settings?pretty" \
+-H 'Content-Type: application/json' \
+-d '{ 
+  "persistent": { 
+    "cluster.routing.allocation.enable": "primaries" 
+  } 
+}'</textarea></p>
+            </li>
+            <li>
+                <p>Stop indexing and perform a synced flush<br /><textarea class="esNode"
+                        readonly>curl -X POST "10.250.3.20:9200/_flush/synced?pretty"</textarea></p>
+            </li>
+            <li>
+                <p>Shutdown an Elasticsearch service<br /><textarea class="esNode" readonly>sudo systemctl stop \
+              elasticsearch.service</textarea></p>
+            </li>
+            <li>
+                <p>Install Patches &amp; Restart the node</p>
+            </li>
+            <li>
+                <p>Start the node and confirm that it automatically joins the cluster by checking the log file or by
+                    submitting a \
+                    _cat/nodes request:<br /><textarea class="esNode" readonly>curl -X GET \
+              "10.250.3.20:9200/_cat/nodes?pretty"</textarea></p>
+            </li>
+            <li>
+                <p>Reenable shard allocation<br /><textarea class="esNode" readonly>curl -X PUT "10.250.3.20:9200/_cluster/settings?pretty" \
+                -H 'Content-Type: application/json' -d '{ 
+                "persistent": { 
+                  "cluster.routing.allocation.enable": null 
+                } 
+              }'</textarea></p>
+            </li>
+            <li>
+                <p>Check the health of the cluster. NOTE: It may take a minute for the "unassigned shards" to be
+                    reassigned to the node that was patched</p>
+                <p><textarea class="esNode" readonly>curl -X GET "10.250.3.20:9200/_cluster/health?pretty"</textarea>
+                </p>
+                <div style="margin-left: 2%;">
+                    <h2>Example:</h2>
+                    <p style="margin-left:30px">[root@dfw3-cld-es-02 edge_admin1]# curl -X GET "{ <br>
+                        "cluster_name" : "graylog",<br>
+                        "status" : "green",<br>
+                        "timed_out" : false,<br>
+                        "number_of_nodes" : 7,<br>
+                        "number_of_data_nodes" : 4,<br>
+                        "active_primary_shards" : 346,<br>
+                        "active_shards" : 612,<br>
+                        "relocating_shards" : 0,<br>
+                        "initializing_shards" : 0,<br>
+                        "unassigned_shards" : 0,<br>
+                        "delayed_unassigned_shards" : 0,<br>
+                        "number_of_pending_tasks" : 0,<br>
+                        "number_of_in_flight_fetch" : 0,<br>
+                        "task_max_waiting_in_queue_millis" : 0,<br>
+                        "active_shards_percent_as_number" : 100.0<br>
+                        }</p>
+                </div>
+            </li>
+            <br />
+        </ol>
+
+
+    </main>
+
+
+
+
+
+    <!--JS here-->
+    <script>
+
+        // let button_clicked = "";
+
+        function TextareaCopyOnClick() {
+            let textareas = document.getElementsByClassName("esNode");
+            for (let i = 0; i < textareas.length; i++) {
+                let textarea = textareas[i];
+                textarea.style.height = "auto";
+                textarea.style.height = textarea.scrollHeight + "px";
+                textarea.addEventListener("click", function copy_text() {
+                    textarea.select();
+                    navigator.clipboard.writeText(textarea.value)
+                        .then(() => {
+                            console.log("Text copied to clipboard!");
+                        })
+                        .catch((error) => {
+                            console.error("Failed to copy text:", error);
+                        });
+                });
+            }
+        }
+        // on page load do:
+        window.onload = function () {
+            TextareaCopyOnClick();
+        }
+
+        // function reply_click(clicked_id) {
+        //     button_clicked = clicked_id;
+        //     // console.log(`Button Clicked: ${button_clicked}`);
+        //     return button_clicked;
+        // }
+
+
+        function getButtonClicked() {
+            ;
+        }
+
+
+
+        let esNodes = {
+            esNode01: "10.250.3.10",
+            esNode02: "10.250.3.20",
+            esNode03: "10.250.3.30",
+            esNode04: "10.250.3.40",
+            esMaster01: "10.250.3.50",
+            esMaster02: "10.250.3.60",
+            esMaster03: "10.250.3.70",
+        };
+
+
+        const buttons = document.getElementsByClassName("button-9");
+        let button;
+        let button_clicked = "";
+        let newIp
+        let ips = document.getElementsByClassName("esNode");
+
+        // function updateNode() {
+        // document.addEventListener("load", function () {
+        // document.getElementsByClassName("esNode").textContent = button_clicked;
+
+        function getWhatButton() {
+            // button_clicked = button.id;
+            console.log(`Button Clicked:${button_clicked}`);
+            return button_clicked;
+
+        }
+        for (i = 0; i < buttons.length; i++) {
+            let button = buttons[i];
+            button.addEventListener("click", function whatButton() {
+                // whatButton();
+                button_clicked = button.id;
+                console.log(`for loop button clicked: ${button_clicked}`);
+                newIp = esNodes[button_clicked];
+                console.log(`newIP ${newIp}`)
+                console.log(`clicker ${button_clicked}`)
+                // regex pattern to find and replace IP's inline
+                let ipPattern = /\b(?:\d{1,3}\.){3}\d{1,3}\b/;
+                let listTitle = document.getElementById("listTitle");
+                let string = `Replaced the IP in the commands below with ${newIp}`;
+                listTitle.textContent = string;
+                for (let i = 0; i < ips.length; i++) {
+                    text = ips[i].textContent;
+                    span = ips[i];
+                    let textarea = ips[i];
+                    let textareaValue = textarea.value;
+                    let updatedTextarea = textareaValue.replace(ipPattern, newIp);
+                    textarea.value = updatedTextarea;
+                    ips[i].style.height = "auto";
+                    ips[i].style.height = ips[i].scrollHeight + "px";
+                }
+            });
+        }
+
+        //TODO 
+        //newIP button_clicked is undefined, need to pass in the value of newIp on every click.
+        // getWhatButton();
+        let elements = document.getElementsByClassName("main");
+        let whatButton = getWhatButton();
+
+
+
+        console.log(`newIP ${newIp}`)
+        console.log(`clicker ${button_clicked}`)
+        // regex pattern to find and replace IP's inline
+        let ipPattern = /\b(?:\d{1,3}\.){3}\d{1,3}\b/;
+        let listTitle = document.getElementById("listTitle");
+        let string = `Replaced the IP in the commands below with ${newIp}`;
+        listTitle.textContent = string;
+        // for (let i = 0; i < )
+
+
+        for (let i = 0; i < ips.length; i++) {
+            text = ips[i].textContent;
+            span = ips[i];
+            let textarea = ips[i];
+            let textareaValue = textarea.value;
+            let updatedTextarea = textareaValue.replace(ipPattern, newIp);
+            textarea.value = updatedTextarea;
+            ips[i].style.height = "auto";
+            ips[i].style.height = ips[i].scrollHeight + "px";
+        }
+        for (let i = 0; i < elements.length; i++) {
+            elements[i].style.visibility = "visible";
+        };
+
+
+        // });
+
+        // }
+
+        // updateNode();
+        function pass() {
+            ;
+        }
+
+
+    </script>
+
+</body>
+
+</html>
+
+
+
+<!-- TODO do some stuff
+and other stuff too  -->
